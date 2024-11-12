@@ -1,0 +1,71 @@
+package MiniProject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
+
+public class GrafanaTest {
+
+	public static void main(String[] args) {
+		  // to open chrome
+		WebDriver driver = new ChromeDriver();
+		//to maximize window
+		driver.manage().window().maximize();
+		//to open url
+		driver.get("https://d3q7rt0kr5fynf.cloudfront.net/ad-tools/mediatailor-logs-query-builder.html");
+		//to select dropdown
+		
+		 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		WebElement dropdown1 = driver.findElement(By.id("envInput"));
+		Select option1 = new Select (dropdown1);
+		option1.selectByVisibleText("OneApp - Production");
+		
+		WebElement dropdown2 = driver.findElement(By.id("regionInput"));
+		Select option2 = new Select (dropdown2);
+		option2.selectByVisibleText("us-west-2");
+		
+		WebElement dropdown3 = driver.findElement(By.id("queryInput"));
+		Select option3 = new Select (dropdown3);
+		option3.selectByVisibleText("➡️ Raw Logs - FW Ad Requests");
+		
+		driver.findElement(By.id("sessionInput")).sendKeys("");
+		
+		 String ptitle = driver.getTitle();
+		 System.out.println(ptitle);
+		 String pwindowHandle = driver.getWindowHandle();
+		 driver.findElement(By.id("button-mt")).click();
+		 Set<String> windowHandles = driver.getWindowHandles();
+		 
+		 List<String> allWindows = new ArrayList<String>(windowHandles);
+		 
+		 driver.switchTo().window(allWindows.get(1));
+				
+		 System.out.println("Child window title: " + driver.getTitle());
+		
+		 
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		driver.findElement(By.xpath("//span[text()='2024-11-11 22:20:31 to 2024-11-11 23:20:31']")).click();
+		driver.findElement(By.xpath("//label[text()='Last 6 hours']")).click();
+		driver.findElement(By.xpath("//button[@class= 'css-5se5b3 css-1wx8bl8-positionRelative']")).click();
+		
+		String text = driver.findElement(By.xpath("//button[@class= 'css-5se5b3 css-1wx8bl8-positionRelative']")).getText();
+		System.out.println(text);
+		
+		driver.close();
+			
+		
+		
+		
+		}
+	
+	
+	
+}
