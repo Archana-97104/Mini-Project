@@ -36,8 +36,8 @@ public class GrafanaTest {
 		Select option3 = new Select (dropdown3);
 		option3.selectByVisibleText("➡️ Raw Logs - FW Ad Requests");
 		
-		driver.findElement(By.id("sessionInput")).sendKeys("");
-		
+		driver.findElement(By.id("sessionInput")).sendKeys("bcdae9f9-186b-4ea9-a3e2-6e78b643db77");
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 		 String ptitle = driver.getTitle();
 		 System.out.println(ptitle);
 		 String pwindowHandle = driver.getWindowHandle();
@@ -51,15 +51,15 @@ public class GrafanaTest {
 		 System.out.println("Child window title: " + driver.getTitle());
 		
 		 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-		driver.findElement(By.xpath("//span[text()='2024-11-11 22:20:31 to 2024-11-11 23:20:31']")).click();
+		
+		driver.findElement(By.xpath("//span[@class='css-1ueg5w']//span[1]")).click();
 		driver.findElement(By.xpath("//label[text()='Last 6 hours']")).click();
 		driver.findElement(By.xpath("//button[@class= 'css-5se5b3 css-1wx8bl8-positionRelative']")).click();
 		
 		String text = driver.findElement(By.xpath("//button[@class= 'css-5se5b3 css-1wx8bl8-positionRelative']")).getText();
 		System.out.println(text);
 		
-		driver.close();
+		
 			
 		
 		
