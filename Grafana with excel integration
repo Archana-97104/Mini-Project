@@ -10,6 +10,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.io.FileOutputStream;
@@ -18,33 +20,45 @@ import java.io.PrintStream;
 import java.time.Duration;
 
 public class GrafanaTest {
-	
+	private PrintStream originalOut;
+	private PrintStream fileOut;
+	private WebDriver driver;
+
+	@BeforeSuite
+	public void setUp() throws IOException {
+		// Define file path for console output
+		//String logFilePath = "C:\\Users\\604550803\\OneDrive - NBCUniversal\\My Documents\\Desktop\\JAVA-IN\\console_output.txt";
+		String logFilePath = "C:\\Users\\604550803\\OneDrive - NBCUniversal\\My Documents\\Desktop\\JAVA-IN\\Eclipse\\Eclipse\\eclipse\\Datas\\Automationproject\\Data\\console_output.txt";
+// Backup original System.out
+		originalOut = System.out;
+// Redirect System.out to a file
+		fileOut = new PrintStream(new FileOutputStream(
+				"C:\\Users\\604550803\\OneDrive - NBCUniversal\\My Documents\\Desktop\\JAVA-IN\\Eclipse\\Eclipse\\eclipse\\Datas\\Automationproject\\Data\\console_output.txt",
+				true));
+		System.setOut(fileOut);
+	}
 
 	@Test(dataProvider = "DropdownData", dataProviderClass = ExcelReader.class)
 	public void runGrafana(String envInput, String regionInput, String queryInput, String sessionInput)
 			throws IOException {
 		// to open chrome
-		 
+
 		WebDriver driver = new ChromeDriver();
 		// to maximize window
 		driver.manage().window().maximize();
 		// to open url
 		driver.get("https://d3q7rt0kr5fynf.cloudfront.net/ad-tools/mediatailor-logs-query-builder.html");
 		// to select dropdown
-
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 		WebElement dropdown1 = driver.findElement(By.id("envInput"));
 		Select option1 = new Select(dropdown1);
 		option1.selectByVisibleText(envInput);
-
 		WebElement dropdown2 = driver.findElement(By.id("regionInput"));
 		Select option2 = new Select(dropdown2);
 		option2.selectByVisibleText(regionInput);
-
 		WebElement dropdown3 = driver.findElement(By.id("queryInput"));
 		Select option3 = new Select(dropdown3);
 		option3.selectByVisibleText(queryInput);
-
 		driver.findElement(By.id("sessionInput")).sendKeys(sessionInput);
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 		String ptitle = driver.getTitle();
@@ -52,25 +66,31 @@ public class GrafanaTest {
 		String pwindowHandle = driver.getWindowHandle();
 		driver.findElement(By.id("button-mt")).click();
 		Set<String> windowHandles = driver.getWindowHandles();
-
 		List<String> allWindows = new ArrayList<String>(windowHandles);
-
 		driver.switchTo().window(allWindows.get(1));
-
 		System.out.println("Child window title: " + driver.getTitle());
-
 		driver.findElement(By.xpath("//span[@class='css-1ueg5w']//span[1]")).click();
 		driver.findElement(By.xpath("//label[text()='Last 6 hours']")).click();
 		driver.findElement(By.xpath("//button[@class= 'css-5se5b3 css-1wx8bl8-positionRelative']")).click();
-
 		String text = driver.findElement(By.xpath("//button[@class= 'css-5se5b3 css-1wx8bl8-positionRelative']"))
 				.getText();
 		System.out.println(text);
-		// System.setOut(new PrintStream(new FileOutputStream("C:\\Users\\604550803\\OneDrive - NBCUniversal\\My Documents\\Desktop\\JAVA-IN/log.txt")));
 
-		
 	}
 
+	@AfterSuite
+	public void tearDown() throws InterruptedException {
+		// Close driver and restore console output
+		Object driver = null;
+		if (driver != null) {
+			driver.wait();
+		}
+
+		// Restore original System.out and close file output
+		System.setOut(originalOut);
+		fileOut.close();
+
+	}
 }
 
 EXCEL CODE
